@@ -1,6 +1,6 @@
 [workspace]
 
 members = [
-	"app",
+	"app/src-tauri",
 	"api"
 ]

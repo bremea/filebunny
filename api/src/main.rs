@@ -1,3 +1,26 @@
-fn main() {
-    println!("Hello, world!");
+use std::net::SocketAddr;
+
+use axum::{routing::get, Router, Extension};
+use tower_http::trace::{TraceLayer, DefaultMakeSpan};
+mod routes;
+mod gateway;
+mod util;
+
+#[tokio::main]
+async fn main() {
+    let database = util::db::connect().await.expect("DB Connection Failed!");
+
+    let app: Router = Router::new()
+        .nest("/api/v1", api::router::api())
+        .route("/gateway/v1", get(gateway::ws::ws_handler))
+		.layer(
+            TraceLayer::new_for_http()
+                .make_span_with(DefaultMakeSpan::default().include_headers(true)),
+        )
+        .layer(Extension(database));
+
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
+        .await
+        .unwrap();
 }
