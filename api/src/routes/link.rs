@@ -1,6 +1,5 @@
-use super::session::RawSessionData;
 use crate::util::{
-    auth::{auth_middleware, VerifyTokenResult},
+    auth::{auth_middleware, VerifyTokenResult, self},
     errors::{ApiError, JsonIncoming},
 };
 use axum::{
@@ -18,7 +17,6 @@ use uuid::Uuid;
 
 pub async fn new_link(
     Extension(database): Extension<Pool<MySql>>,
-    Extension(verification): Extension<VerifyTokenResult>,
     JsonIncoming(payload): JsonIncoming<LinkOptions>,
 ) -> Result<Json<LinkData>, (StatusCode, Json<ApiError>)> {
     if payload.max_size > 101000 {
@@ -30,11 +28,13 @@ pub async fn new_link(
 	}
 
     let link_id: Uuid = Uuid::new_v4();
+	let token_str = auth::sign_jwt(link_id.to_string());
     let full_url = convert_to_url(&link_id.to_string());
 
     let link_res = LinkData {
         url: full_url,
         id: link_id.to_string(),
+		token: token_str.to_string(),
         expires: payload.expires,
         max_usage: payload.max_usage,
         max_size: payload.max_size,
@@ -44,7 +44,7 @@ pub async fn new_link(
         "INSERT INTO links (id, owner, expires, max_usage, max_size) VALUES (?, ?, ?, ?, ?)",
     )
     .bind(link_id.to_string())
-    .bind(verification.id)
+    .bind(payload.owner)
     .bind(payload.expires)
     .bind(payload.max_usage)
     .bind(payload.max_size)
@@ -154,28 +154,9 @@ async fn link_details(
         }
     };
 
-    let find_owner = sqlx::query_as!(
-        RawSessionData,
-        "SELECT * FROM sessions WHERE id = ?",
-        raw_link_data.owner
-    )
-    .fetch_one(&database)
-    .await;
-
-    let owner_data = match find_owner {
-        Ok(data) => data,
-        Err(_) => {
-            let api_error_info = ApiError {
-                error: true,
-                message: "Internal Error".to_string(),
-            };
-            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(api_error_info)));
-        }
-    };
-
     let link_data = LinkDataDetailed {
         url: convert_to_url(&raw_link_data.id),
-        owner: owner_data.name,
+        owner: raw_link_data.owner,
         id: raw_link_data.id,
         expires: raw_link_data.expires,
         max_usage: raw_link_data.max_usage,
@@ -185,51 +166,8 @@ async fn link_details(
     return Ok(Json(link_data));
 }
 
-async fn user_links(
-    Extension(database): Extension<Pool<MySql>>,
-    Extension(verification): Extension<VerifyTokenResult>,
-) -> Result<Json<UserLinks>, (StatusCode, Json<ApiError>)> {
-    let find_links = sqlx::query_as!(
-        RawLinkData,
-        "SELECT * FROM links WHERE owner = ?",
-        verification.id
-    )
-    .fetch_all(&database)
-    .await;
-
-    let link_find_result = match find_links {
-        Ok(data) => data,
-        Err(_) => {
-            let api_error_info = ApiError {
-                error: true,
-                message: "Internal Error".to_string(),
-            };
-            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(api_error_info)));
-        }
-    };
-
-    let mut final_link_list: Vec<LinkData> = Vec::new();
-
-    for link_data in link_find_result.iter() {
-        final_link_list.push(LinkData {
-            url: convert_to_url(&link_data.id),
-            id: (&link_data.id).to_owned(),
-            expires: link_data.expires,
-            max_usage: link_data.max_usage,
-            max_size: link_data.max_size,
-        })
-    }
-
-    let all_user_links = UserLinks {
-        links: final_link_list,
-    };
-
-    return Ok(Json(all_user_links));
-}
-
 pub fn router() -> Router {
     return Router::new()
-        .route("/", get(user_links))
         .route("/", post(new_link))
         .route("/:id", delete(delete_link))
         .layer(ServiceBuilder::new().layer(middleware::from_fn(auth_middleware)))
@@ -245,6 +183,7 @@ fn convert_to_url(id: &String) -> String {
 
 #[derive(Deserialize)]
 pub struct LinkOptions {
+	owner: String,
     expires: u64,
     max_usage: u32,
     max_size: u32,
@@ -254,6 +193,7 @@ pub struct LinkOptions {
 pub struct LinkData {
     url: String,
     id: String,
+	token: String,
     expires: u64,
     max_usage: u32,
     max_size: u32,
