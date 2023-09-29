@@ -11,6 +11,8 @@ lerna-debug.log*
 dist
 dist-ssr
 *.local
+**/.env
+**/.sqlx
 
 # Editor directories and files
 **/.vscode/*
