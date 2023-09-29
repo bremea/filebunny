@@ -9,6 +9,6 @@
 >
 	<RiShutDownLine
 		size="36"
-		class={`${active ? 'text-aquamarine aquaGlow' : 'text-gray-400'} group-hover:text-ruddy-blue group-focus:text-ruddy-blue transition-all`}
+		class={`${active ? 'fill-aquamarine aquaGlow' : 'text-gray-400'} group-hover:text-ruddy-blue group-focus:text-ruddy-blue transition-all`}
 	/>
 </button>
