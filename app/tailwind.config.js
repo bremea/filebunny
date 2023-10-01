@@ -6,7 +6,7 @@ export default {
 			colors: {
 				'eerie-black': '#1E1F1F',
 				'outer-space': '#464949',
-				'jet': '#323434',
+				jet: '#323434',
 				aquamarine: '#B5FFE9',
 				'ruddy-blue': '#71A9F7',
 				'ultra-violet': '#F899FF',
@@ -14,5 +14,13 @@ export default {
 			}
 		}
 	},
+	safelist: [
+		'group-hover:text-aquamarine',
+		'group-hover:text-ruddy-blue',
+		'group-hover:text-ultra-violet',
+		'group-hover:fill-aquamarine',
+		'group-hover:fill-ruddy-blue',
+		'group-hover:fill-ultra-violet'
+	],
 	plugins: []
 };

@@ -1,10 +1,63 @@
 import { DEFAULT_USER_DATA, PREFERENCES_PATH } from '$lib/utils/constants';
 import { writeFile, readTextFile, exists, BaseDirectory } from '@tauri-apps/api/fs';
 import { writable, type Writable } from 'svelte/store';
-import type { LinkData, UserPreferences } from '$lib/utils/types';
+import type { LinkMeta, UserPreferences } from '$lib/utils/types';
 
 export const prefs: Writable<UserPreferences> = writable(DEFAULT_USER_DATA);
-export const linkData: Writable<Array<LinkData>> = writable([]);
+export const linkData: Writable<Array<LinkMeta>> = writable([
+	{
+		id: 'a',
+		relayId: 's',
+		authToken: 'b',
+		data: {
+			url: 'https://google.com/',
+			id: 'abc123',
+			owner: 'me',
+			expires: 1701487202,
+			max_usage: 1,
+			max_size: 2500
+		}
+	},
+	{
+		id: 'a',
+		relayId: 's',
+		authToken: 'b',
+		data: {
+			url: 'https://google.com/',
+			id: 'abc123',
+			owner: 'me',
+			expires: 1701487202,
+			max_usage: 1,
+			max_size: 2500
+		}
+	},
+	{
+		id: 'a',
+		relayId: 's',
+		authToken: 'b',
+		data: {
+			url: 'https://google.com/',
+			id: 'abc123',
+			owner: 'me',
+			expires: 1701487202,
+			max_usage: 1,
+			max_size: 2500
+		}
+	},
+	{
+		id: 'a',
+		relayId: 's',
+		authToken: 'b',
+		data: {
+			url: 'https://google.com/',
+			id: 'abc123',
+			owner: 'me',
+			expires: 1701487202,
+			max_usage: 1,
+			max_size: 2500
+		}
+	}
+]);
 
 export const writeDataFile = async (newData: UserPreferences) => {
 	try {
