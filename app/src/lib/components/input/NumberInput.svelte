@@ -8,11 +8,11 @@
 </script>
 
 <div class="w-full space-y-1">
-	<label for={id} class="p-4"><slot /></label>
+	<label for={id} class="p-2"><slot /></label>
 	<input
 		class={`${
 			center ? 'text-center' : 'text-left'
-		} w-full px-4 py-1 rounded-full bg-transparent border-2 border-outer-space focus:border-aquamarine focus:bg-outer-space hover:bg-outer-space transition-all`}
+		} w-full px-4 py-1 rounded-full border-2 border-night bg-night focus:border-aquamarine transition-all`}
 		bind:value
 		type="number"
 		{id}

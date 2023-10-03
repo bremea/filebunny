@@ -5,13 +5,16 @@ export default {
 		extend: {
 			colors: {
 				'eerie-black': '#1E1F1F',
-				'night': '#141515',
+				night: '#141515',
 				jet: '#282A2A',
 				'outer-space': '#464949',
 				aquamarine: '#B5FFE9',
 				'ruddy-blue': '#71A9F7',
 				'ultra-violet': '#F899FF',
 				'bright-pink': '#E76D83'
+			},
+			spacing: {
+				popout: '32rem'
 			}
 		}
 	},

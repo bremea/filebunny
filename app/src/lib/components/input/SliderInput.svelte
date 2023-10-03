@@ -7,11 +7,11 @@
 	export let sliderText: string = '1000 GB';
 </script>
 
-<div class="w-full space-y-1">
-	<label for={id} class="p-4"><slot /></label>
-	<div class="w-full relative flex">
+<div class="w-full space-y-1 pr-16">
+	<label for={id} class="p-2"><slot /></label>
+	<div class="w-full relative flex pl-2">
 		<input
-			class="w-full mx-4 rounded-full bg-transparent border-2 accent-aquamarine border-outer-space focus:border-aquamarine focus:bg-outer-space hover:bg-outer-space transition-all"
+			class="w-full rounded-full border-2 accent-aquamarine border-night bg-night focus:border-aquamarine transition-all"
 			bind:value
 			type="range"
 			{id}
@@ -19,7 +19,7 @@
 			{min}
 			on:input={onInput}
 		/>
-		<div class="w-32 absolute -right-32">
+		<div class="w-32 absolute -right-32 pl-2 pt-px">
 			<p class="text-left text-sm">{sliderText}</p>
 		</div>
 	</div>
