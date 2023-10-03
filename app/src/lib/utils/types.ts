@@ -1,4 +1,4 @@
-import type { LinkData } from "$lib/commands/links";
+import type { LinkData } from '$lib/commands/links';
 
 export type ApiResponse<T> = T | ApiError;
 
@@ -20,6 +20,7 @@ export interface Relay {
 export interface UserPreferences {
 	defaultRelayId: string;
 	relays: Array<Relay>;
+	links: Array<LinkMeta>;
 }
 
 export interface LinkMeta {
@@ -27,4 +28,15 @@ export interface LinkMeta {
 	relayId: string;
 	authToken: string;
 	data: LinkData;
+}
+
+export interface DOMRect {
+	bottom: number;
+	height: number;
+	left: number;
+	right: number;
+	top: number;
+	width: number;
+	x: number;
+	y: number;
 }

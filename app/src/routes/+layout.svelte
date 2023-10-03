@@ -8,7 +8,7 @@
 
 <main class="flex">
 	<div
-		class="flex flex-col items-start py-4 w-48 border-r-2 border-white border-opacity-10 h-screen"
+		class="flex flex-col items-start py-4 w-48 h-screen bg-eerie-black"
 	>
 		<Logo class="px-4 pb-2" />
 		<NavItem item={0} path="/" />
