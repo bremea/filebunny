@@ -10,7 +10,8 @@
 		RiDeleteBinLine,
 		RiInformationLine
 	} from 'svelte-remixicon';
-	import { fade, scale } from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
+	import { blur, fade, scale } from 'svelte/transition';
 
 	let popoutActive: boolean = true;
 </script>
@@ -57,17 +58,20 @@
 	</div>
 	{#if popoutActive}
 		<div
-			class="p-12 h-full w-full fixed z-20 top-0 left-0 flex items-center justify-center backdrop-blur"
+			class="p-12 h-full w-full fixed z-20 top-0 left-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
 			transition:fade={EASING_SETTINGS}
 		>
-			<div
-				class="bg-jet rounded-lg shadow-lg w-full h-full p-4"
-				transition:scale={EASING_SETTINGS}
-			>
+			<div class="bg-jet rounded-lg shadow-lg w-full h-full p-4" transition:scale={EASING_SETTINGS}>
 				<div class="flex justify-between items-center">
 					<h1 class="text-2xl w-full">New Link</h1>
-					<Button class="w-min group focus:border-bright-pink" onClick={() => popoutActive = false}>
-						<RiCloseLine size="24" class="group-focus:fill-bright-pink group-hover:fill-bright-pink transition-all" />
+					<Button
+						class="w-min group focus:border-bright-pink"
+						onClick={() => (popoutActive = false)}
+					>
+						<RiCloseLine
+							size="24"
+							class="group-focus:fill-bright-pink group-hover:fill-bright-pink transition-all"
+						/>
 					</Button>
 				</div>
 			</div>
