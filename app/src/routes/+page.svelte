@@ -70,7 +70,7 @@
 	</div>
 	{#if popoutActive}
 		<div
-			class="p-12 h-full w-full fixed z-20 top-0 left-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+			class="p-12 h-full w-full fixed z-20 top-0 left-0 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm"
 			transition:fade={EASING_SETTINGS}
 		>
 			<div
